@@ -2,8 +2,8 @@
 set -e 0
 
 ENCODER=${ENCODER:-libx265}
-CRF=${CRF:-20}
-PRESET=${PRESET:-slow}
+CRF=${CRF:-30}
+PRESET=${PRESET:-medium}
 TUNE=${TUNE:-film}
 EXTENSION=${EXTENSION:-mp4}
 THREADS=${THREADS:-1}

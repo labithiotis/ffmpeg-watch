@@ -6,8 +6,8 @@ services:
     restart: always
     environment:
       ENCODER: libx265
-      CRF: 20
-      PRESET: slow
+      CRF: 35
+      PRESET: medium
       TUNE: film
       EXTENSION: mp4
     volumes:
