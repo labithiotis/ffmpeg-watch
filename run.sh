@@ -14,7 +14,7 @@ STORAGE=${STORAGE:-/storage}
 
 run() {
   cd "$WATCH" || exit
-  FILES=$(find . -type f -not -path '*/\.*')
+  FILES=$(find . -type f -not -path '*/\.*'  | egrep '.*')
   cd ..
   echo "$FILES" | while read -r FILE
   do
@@ -29,7 +29,7 @@ process() {
   destination="$STORAGE"/"${filepath%.*}"."$EXTENSION"
   cd "$STORAGE" && mkdir -p "$(dirname "$filepath")" && cd ..
 
-  echo "Encoding $filepath"
+  echo $(date +"%Y-%m-%d-%T")
 
   nice -"$PRIORITY" cpulimit -l "$CPU_LIMIT" -- ffmpeg \
     -hide_banner \
@@ -40,10 +40,7 @@ process() {
     -preset "$PRESET" \
     -crf "$CRF" \
     -threads "$THREADS" \
-    -stats \
     "$destination"
-
-  echo "Encoded $filepath"
 
   path=${filepath%/*}
   mv "$STORAGE"/"$path" "$OUTPUT"/"$path"
