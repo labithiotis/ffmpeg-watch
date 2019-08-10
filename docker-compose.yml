@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  ffmpeg-watch:
+    container_name: ffmpeg-watch
+    build: labithiotis/ffmpeg-watch
+    restart: always
+    environment:
+      ENCODER: libx265
+      CRF: 20
+      PRESET: slow
+      TUNE: film
+      EXTENSION: mp4
+    volumes:
+      - 'YOUR_PATH/watch:/watch'
+      - 'YOUR_PATH/output:/output'

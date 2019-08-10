@@ -6,16 +6,13 @@ CRF=${CRF:-20}
 PRESET=${PRESET:-slow}
 TUNE=${TUNE:-film}
 EXTENSION=${EXTENSION:-mp4}
-WATCH=${WATCH:-./watch}
-OUTPUT=${OUTPUT:-./output}
-TMP=${TMP:-./tmp}
+WATCH=${WATCH:-/watch}
+OUTPUT=${OUTPUT:-/output}
+STORAGE=${STORAGE:-/storage}
 
 run() {
   cd "$WATCH" || exit
-  FILES=$(ls -R | awk '
-/:$/&&f{s=$0;f=0}
-/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}
-NF&&f{ print s"/"$0 }')
+  FILES=$(find . -type f -not -path '*/\.*')
   cd ..
   for FILE in $FILES; do
     process "$FILE"
@@ -25,18 +22,18 @@ NF&&f{ print s"/"$0 }')
 process() {
   file=$1
   filepath=${file:2}
-  in="$WATCH"/"$filepath"
-  tmp="$TMP"/"${filepath%.*}"."$EXTENSION"
-  cd "$TMP" && mkdir -p "$(dirname "$filepath")" && cd ..
+  input="$WATCH"/"$filepath"
+  destination="$STORAGE"/"${filepath%.*}"."$EXTENSION"
+  cd "$STORAGE" && mkdir -p "$(dirname "$filepath")" && cd ..
 
   echo "Encoding $filepath"
 
   ffmpeg \
     -hide_banner \
     -y \
-    -loglevel panic \
-    -i "$in" \
-    "$tmp" \
+    -loglevel warning \
+    -i "$input" \
+    "$destination" \
     -map 0 \
     -c copy \
     -c:v "$ENCODER" \
@@ -47,13 +44,14 @@ process() {
   echo "Encoded $filepath"
 
   path=${filepath%/*}
-  mv "$TMP"/"$path" "$OUTPUT"/"$path"
+  mv "$STORAGE"/"$path" "$OUTPUT"/"$path"
   rm -rf "$WATCH"/"$path"
 }
 
 processes=$(ps aux | grep -i "ffmpeg" | awk '{print $11}')
 for i in $processes; do
   if [ "$i" == "ffmpeg" ] ;then
+    echo 'Waiting for current econding to complete...'
     exit 0
   fi
 done
