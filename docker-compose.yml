@@ -2,7 +2,7 @@ version: '3.4'
 services:
   ffmpeg-watch:
     container_name: ffmpeg-watch
-    build: labithiotis/ffmpeg-watch
+    build: .
     restart: always
     environment:
       ENCODER: libx265
@@ -11,5 +11,6 @@ services:
       TUNE: film
       EXTENSION: mp4
     volumes:
+      - 'YOUR_PATH/storage:/storage'
       - 'YOUR_PATH/watch:/watch'
       - 'YOUR_PATH/output:/output'

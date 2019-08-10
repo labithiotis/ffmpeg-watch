@@ -7,7 +7,7 @@ You need to set your watch and output folders either as ENVIRONMENT variables or
 services:
   ffmpeg-watch:
     container_name: ffmpeg-watch
-    build: labithiotis/ffmpeg-watch
+    image: labithiotis/ffmpeg-watch
     restart: always
     environment:
       ENCODER: libx265
@@ -16,8 +16,9 @@ services:
       TUNE: film
       EXTENSION: mp4
     volumes:
-      - 'YOUR_PATH/watch:/watch'
-      - 'YOUR_PATH/output:/output'
+      - 'PATH_TO_STORAGE:/storage'
+      - 'PATH_TO_WATCH:/watch'
+      - 'PATH_TO_OUTPUT:/output'
 ```
 
 ## Options

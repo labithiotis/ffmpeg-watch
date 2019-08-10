@@ -28,10 +28,11 @@ process() {
 
   echo "Encoding $filepath"
 
-  ffmpeg \
+  time ffmpeg \
     -hide_banner \
     -y \
     -loglevel warning \
+    -stats \
     -i "$input" \
     "$destination" \
     -map 0 \
