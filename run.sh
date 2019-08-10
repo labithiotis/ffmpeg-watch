@@ -1,12 +1,13 @@
 #!/bin/bash
 set -e 0
 
-ENCODER=${ENCODER:-libx265}
-CRF=${CRF:-30}
-PRESET=${PRESET:-medium}
-TUNE=${TUNE:-film}
 EXTENSION=${EXTENSION:-mp4}
-THREADS=${THREADS:-1}
+ENCODER=${ENCODER:-libx265}
+PRESET=${PRESET:-veryfast}
+CRF=${CRF:-28}
+THREADS=${THREADS:-2}
+CPU_LIMIT=${CPU_LIMIT:-30}
+PRIORITY=${PRIORITY:-19}
 WATCH=${WATCH:-/watch}
 OUTPUT=${OUTPUT:-/output}
 STORAGE=${STORAGE:-/storage}
@@ -15,7 +16,8 @@ run() {
   cd "$WATCH" || exit
   FILES=$(find . -type f -not -path '*/\.*')
   cd ..
-  for FILE in $FILES; do
+  echo "$FILES" | while read -r FILE
+  do
     process "$FILE"
   done;
 }
@@ -29,20 +31,17 @@ process() {
 
   echo "Encoding $filepath"
 
-  time ffmpeg \
+  nice -"$PRIORITY" cpulimit -l "$CPU_LIMIT" -- ffmpeg \
     -hide_banner \
     -y \
     -loglevel warning \
-    -stats \
     -i "$input" \
-    "$destination" \
-    -map 0 \
-    -c copy \
     -c:v "$ENCODER" \
     -preset "$PRESET" \
     -crf "$CRF" \
-    -tune "$TUNE"
-    -threads THREADS
+    -threads "$THREADS" \
+    -stats \
+    "$destination"
 
   echo "Encoded $filepath"
 

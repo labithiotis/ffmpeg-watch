@@ -6,11 +6,10 @@ services:
     restart: always
     environment:
       ENCODER: libx265
-      CRF: 35
-      PRESET: medium
-      TUNE: film
+      PRESET: veryfast
+      CRF: 29
       EXTENSION: mp4
     volumes:
-      - 'YOUR_PATH/storage:/storage'
-      - 'YOUR_PATH/watch:/watch'
-      - 'YOUR_PATH/output:/output'
+      - './storage:/storage'
+      - './watch:/watch'
+      - './output:/output'
