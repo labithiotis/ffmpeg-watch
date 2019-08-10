@@ -6,6 +6,7 @@ CRF=${CRF:-20}
 PRESET=${PRESET:-slow}
 TUNE=${TUNE:-film}
 EXTENSION=${EXTENSION:-mp4}
+THREADS=${THREADS:-1}
 WATCH=${WATCH:-/watch}
 OUTPUT=${OUTPUT:-/output}
 STORAGE=${STORAGE:-/storage}
@@ -41,6 +42,7 @@ process() {
     -preset "$PRESET" \
     -crf "$CRF" \
     -tune "$TUNE"
+    -threads THREADS
 
   echo "Encoded $filepath"
 

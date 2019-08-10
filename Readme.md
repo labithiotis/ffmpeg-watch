@@ -33,3 +33,4 @@ services:
 | CRF           | 20      | A quality factor for the encode from 0.0-58.0. Lower numbers are better quality and higher file size.              |
 | PRESET        | slow  | Set as low as you're willing to wait. See https://x265.readthedocs.io/en/default/presets.html |
 | TUNE        | film  |  Avaiable options for h.265 `psnr`, `ssim`, `grain`, `zerolatency`, `fastdecode`. See https://trac.ffmpeg.org/wiki/Encode/H.264#crf |
+| THREADS        | 1  |  How many CPU threads to use |
