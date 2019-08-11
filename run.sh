@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e 0
 
+
 EXTENSION=${EXTENSION:-mp4}
 ENCODER=${ENCODER:-libx265}
 PRESET=${PRESET:-veryfast}
@@ -8,6 +9,8 @@ CRF=${CRF:-28}
 THREADS=${THREADS:-2}
 CPU_LIMIT=${CPU_LIMIT:-30}
 PRIORITY=${PRIORITY:-19}
+ANALYZEDURATION=${ANALYZEDURATION:-100000000}
+PROBESIZE=${PROBESIZE:-100000000}
 WATCH=${WATCH:-/watch}
 OUTPUT=${OUTPUT:-/output}
 STORAGE=${STORAGE:-/storage}
@@ -31,12 +34,13 @@ process() {
 
   echo $(date +"%Y-%m-%d-%T")
 
+  trap 'exit' INT
   nice -"$PRIORITY" cpulimit -l "$CPU_LIMIT" -- ffmpeg \
     -hide_banner \
     -y \
     -loglevel warning \
-    -analyzeduration 100M \
-    -probesize 100M \
+    -analyzeduration "$ANALYZEDURATION" \
+    -probesize "$PROBESIZE" \
     -i "$input" \
     -c:v "$ENCODER" \
     -preset "$PRESET" \
