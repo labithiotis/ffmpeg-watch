@@ -35,12 +35,17 @@ process() {
     -hide_banner \
     -y \
     -loglevel warning \
+    -analyzeduration 100M \
+    -probesize 100M \
     -i "$input" \
     -c:v "$ENCODER" \
     -preset "$PRESET" \
     -crf "$CRF" \
     -threads "$THREADS" \
     "$destination"
+
+  echo "Finished encoding $filepath"
+  echo $(date +"%Y-%m-%d-%T")
 
   path=${filepath%/*}
   mv "$STORAGE"/"$path" "$OUTPUT"/"$path"
