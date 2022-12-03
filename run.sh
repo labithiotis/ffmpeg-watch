@@ -15,6 +15,7 @@ PROBESIZE=${PROBESIZE:-100000000}
 WATCH=${WATCH:-/watch}
 OUTPUT=${OUTPUT:-/output}
 STORAGE=${STORAGE:-/storage}
+EXTRAFLAGS=${EXTRAFLAGS}
 
 run() {
   cd "$WATCH" || exit
@@ -47,6 +48,7 @@ process() {
     -preset "$PRESET" \
     -crf "$CRF" \
     -threads "$THREADS" \
+    $EXTRAFLAGS \
     "$destination"
 
   killall ffmpeg >/dev/null || true
