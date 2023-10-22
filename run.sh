@@ -3,6 +3,7 @@ set -e
 
 
 EXTENSION=${EXTENSION:-mp4}
+LOGLEVEL=${LOGLEVEL:warning}
 ENCODER=${ENCODER:-libx264}
 PRESET=${PRESET:-veryfast}
 CRF=${CRF:-35}
@@ -14,6 +15,7 @@ PROBESIZE=${PROBESIZE:-100000000}
 WATCH=${WATCH:-/watch}
 OUTPUT=${OUTPUT:-/output}
 STORAGE=${STORAGE:-/storage}
+EXTRAFLAGS=${EXTRAFLAGS}
 
 run() {
   cd "$WATCH" || exit
@@ -38,7 +40,7 @@ process() {
   nice -"$PRIORITY" cpulimit -l "$CPU_LIMIT" -- ffmpeg \
     -hide_banner \
     -y \
-    -loglevel warning \
+    -loglevel "$LOGLEVEL" \
     -analyzeduration "$ANALYZEDURATION" \
     -probesize "$PROBESIZE" \
     -i "$input" \
@@ -46,15 +48,16 @@ process() {
     -preset "$PRESET" \
     -crf "$CRF" \
     -threads "$THREADS" \
+    $EXTRAFLAGS \
     "$destination"
 
-  killall ffmpeg >/dev/null
+  killall ffmpeg >/dev/null || true
 
   echo "Finished encoding $filepath"
   echo $(date +"%Y-%m-%d-%T")
 
   path=${filepath%/*}
-  mv "$STORAGE"/"$path" "$OUTPUT"/"$path"
+  mv "$destination" "$OUTPUT"/"$path"
   rm -rf "$WATCH"/"$path"
 }
 
